@@ -33,7 +33,7 @@ public class GenerateNumberService {
         String number = generateSeriesNumber(seriesNumber);
         return new GenerateSeriesNumberResponse(number);
     }
-    //что то
+
 //public GenerateSeriesNumberResponse generateNumber(GenerateSeriesNumberRequest request) throws SQLException {
 //    SeriesNumber seriesNumber = seriesNumberRepository
 //            .findByOrgCodeAndYear(request.orgCode(), request.year())
