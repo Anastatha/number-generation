@@ -6,6 +6,9 @@ public class SeriesNumber {
     private String year;
     private int counter;
 
+    public SeriesNumber() {
+    }
+
     public SeriesNumber(int id, String orgCode, String year, int counter) {
         this.id = id;
         this.org_code = orgCode;
