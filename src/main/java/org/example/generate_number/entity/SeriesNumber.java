@@ -13,7 +13,6 @@ public class SeriesNumber {
         this.counter = counter;
     }
 
-
     public SeriesNumber(String orgCode, String year) {
         this.org_code = orgCode;
         this.year = year;

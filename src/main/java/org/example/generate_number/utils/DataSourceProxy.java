@@ -1,5 +1,6 @@
 package org.example.generate_number.utils;
 
+import org.example.generate_number.error.DatabaseOperationException;
 import org.example.generate_number.mapper.ResultSetMapper;
 import org.example.generate_number.utils.params.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +23,29 @@ public class DataSourceProxy {
         this.dataSource = dataSource;
     }
 
-    public <T> List<T> executeSelect(String sql, ResultSetMapper<T> resultSetMapper, QueryParam... params) throws SQLException {
-        PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(sql);
-        setParams(preparedStatement, params);
-        preparedStatement.execute();
+    public <T> List<T> executeSelect(String sql, ResultSetMapper<T> resultSetMapper, QueryParam... params) {
+        try {
+            PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(sql);
+            setParams(preparedStatement, params);
+            preparedStatement.execute();
 
-        return mapResultSet(preparedStatement.getResultSet(), resultSetMapper);
+            return mapResultSet(preparedStatement.getResultSet(), resultSetMapper);
+        } catch (SQLException e) {
+            throw new DatabaseOperationException(e.getMessage(), e);
+        }
     }
 
-    public void executeDelete(String sql, QueryParam... params) throws SQLException {
-        PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(sql);
-        setParams(preparedStatement, params);
-        preparedStatement.execute();
+    public void executeDelete(String sql, QueryParam... params) {
+        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(sql)) {
+            setParams(preparedStatement, params);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Ошибка при выполнении DELETE запроса", e);
+        }
     }
 
     private void setParams(PreparedStatement preparedStatement, QueryParam... params) throws SQLException {
-        for(int i =0; i < params.length ; i++){
+        for(int i = 0; i < params.length; i++){
             params[i].setQueryParamValueToStatement(preparedStatement, i+1);
         }
     }
@@ -52,7 +60,12 @@ public class DataSourceProxy {
         return list;
     }
 
-    public Array createArrayOf(String type, Object[] objects) throws SQLException {
-        return dataSource.getConnection().createArrayOf(type, objects);
+    public Array createArrayOf(String type, Object[] objects){
+        try {
+            return dataSource.getConnection().createArrayOf(type, objects);
+        } catch (SQLException e) {
+            throw new DatabaseOperationException("Ошибка при создании массива SQL ", e);
+        }
+
     }
 }
