@@ -89,7 +89,7 @@ public class JwtTokenProvider {
                 null,
                 List.of(new SimpleGrantedAuthority(role))
                 // Для ролей: roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
-//                List.of() // Пустой список authorities, если ролей нет
+                //List.of() // Пустой список authorities, если ролей нет
         );
     }
 
