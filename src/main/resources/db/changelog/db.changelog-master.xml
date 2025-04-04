@@ -7,4 +7,7 @@
 
     <!-- Подключение SQL-миграции -->
     <include file="db/changelog/001-create-series-number.sql" />
+    <include file="db/changelog/002-create-users-table.sql" />
+    <include file="db/changelog/003-create-role-enum.sql"/>
+    <include file="db/changelog/004-add-role-for-user.sql"/>
 </databaseChangeLog>
